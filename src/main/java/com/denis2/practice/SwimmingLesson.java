@@ -1,4 +1,5 @@
 package com.denis2.practice;
+
 import jakarta.persistence.*;
 
 @Entity
