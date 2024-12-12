@@ -1,23 +1,11 @@
 package com.denis2.practice;
 
-import jakarta.persistence.*;
-
-@Entity
-@Table(name = "swimming_lesson")
 public class SwimmingLesson {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
     private String groupName;
     private int lessonNumber;
     private String date;
     private String coach;
     private int poolNumber;
-
-    public SwimmingLesson() {
-    }
 
     public SwimmingLesson(String groupName, int lessonNumber, String date, String coach, int poolNumber) {
         this.groupName = groupName;
@@ -25,14 +13,7 @@ public class SwimmingLesson {
         this.date = date;
         this.coach = coach;
         this.poolNumber = poolNumber;
-    }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getGroupName() {
