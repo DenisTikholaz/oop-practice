@@ -4,6 +4,7 @@ import com.denis2.practice.dto.SwimmingLessonDTO;
 import com.denis2.practice.ScheduleLessonService;
 import com.denis2.practice.SwimmingLesson;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -62,5 +63,4 @@ public class ScheduleLessonController {
         return ResponseEntity.ok(groupedSchedules);
     }
 }
-
 
