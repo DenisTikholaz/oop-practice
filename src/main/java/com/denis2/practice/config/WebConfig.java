@@ -12,7 +12,7 @@ public class WebConfig {
     public FilterRegistrationBean<TokenFilter> loggingFilter(TokenFilter tokenFilter) {
         FilterRegistrationBean<TokenFilter> registrationBean = new FilterRegistrationBean<>();
         registrationBean.setFilter(tokenFilter);
-        registrationBean.addUrlPatterns("/api/schedules/*"); // Protect CRUD endpoints
+        registrationBean.addUrlPatterns("/api/lessons/*");
         return registrationBean;
     }
 }

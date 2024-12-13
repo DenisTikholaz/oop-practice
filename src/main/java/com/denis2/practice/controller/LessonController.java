@@ -14,21 +14,21 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/schedules")
-public class ScheduleLessonController {
+@RequestMapping("/api/lessons")
+public class LessonController {
 
     @Autowired
     private ScheduleLessonService scheduleService;
 
     @GetMapping
-    public List<SwimmingLessonDTO> getAllSchedules() {
+    public List<SwimmingLessonDTO> getAllLessons() {
         return scheduleService.getAllSchedules().stream()
                 .map(SwimmingLessonDTO::fromEntity)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<SwimmingLessonDTO> getScheduleById(@PathVariable Long id) {
+    public ResponseEntity<SwimmingLessonDTO> getLessonById(@PathVariable Long id) {
         return scheduleService.getScheduleById(id)
                 .map(SwimmingLessonDTO::fromEntity)
                 .map(ResponseEntity::ok)
@@ -36,31 +36,24 @@ public class ScheduleLessonController {
     }
 
     @PostMapping
-    public ResponseEntity<SwimmingLessonDTO> createSchedule(@Valid @RequestBody SwimmingLessonDTO scheduleDTO) {
-        SwimmingLesson savedSchedule = scheduleService.createSchedule(scheduleDTO.toEntity());
-        return ResponseEntity.ok(SwimmingLessonDTO.fromEntity(savedSchedule));
+    public ResponseEntity<SwimmingLessonDTO> createLesson(@Valid @RequestBody SwimmingLessonDTO lessonDTO) {
+        SwimmingLesson savedLesson = scheduleService.createSchedule(lessonDTO.toEntity());
+        return ResponseEntity.ok(SwimmingLessonDTO.fromEntity(savedLesson));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<SwimmingLessonDTO> updateSchedule(@PathVariable Long id, @Valid @RequestBody SwimmingLessonDTO scheduleDTO) {
+    public ResponseEntity<SwimmingLessonDTO> updateLesson(@PathVariable Long id, @Valid @RequestBody SwimmingLessonDTO lessonDTO) {
         try {
-            SwimmingLesson updatedSchedule = scheduleService.updateSchedule(id, scheduleDTO.toEntity());
-            return ResponseEntity.ok(SwimmingLessonDTO.fromEntity(updatedSchedule));
+            SwimmingLesson updatedLesson = scheduleService.updateSchedule(id, lessonDTO.toEntity());
+            return ResponseEntity.ok(SwimmingLessonDTO.fromEntity(updatedLesson));
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteSchedule(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteLesson(@PathVariable Long id) {
         scheduleService.deleteSchedule(id);
         return ResponseEntity.noContent().build();
     }
-
-    @GetMapping("/groupedByWeekdays")
-    public ResponseEntity<Map<String, List<SwimmingLessonDTO>>> getSchedulesGroupedByWeekdays() {
-        Map<String, List<SwimmingLessonDTO>> groupedSchedules = scheduleService.getSchedulesGroupedByWeekdays();
-        return ResponseEntity.ok(groupedSchedules);
-    }
 }
-

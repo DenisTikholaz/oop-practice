@@ -36,7 +36,7 @@ public class AuthController {
     }
 
     private String generateRandomTokenPart() {
-        byte[] randomBytes = new byte[24]; // 24 bytes -> 192 bits
+        byte[] randomBytes = new byte[24];
         secureRandom.nextBytes(randomBytes);
         return Base64.getUrlEncoder().withoutPadding().encodeToString(randomBytes);
     }
