@@ -36,13 +36,21 @@ public class LessonController {
     }
 
     @PostMapping
-    public ResponseEntity<SwimmingLessonDTO> createLesson(@Valid @RequestBody SwimmingLessonDTO lessonDTO) {
+    public ResponseEntity<SwimmingLessonDTO> createLesson(@RequestBody SwimmingLessonDTO lessonDTO, @RequestHeader("Authorization") String token) {
+        if (!isAuthorized(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         SwimmingLesson savedLesson = scheduleService.createSchedule(lessonDTO.toEntity());
         return ResponseEntity.ok(SwimmingLessonDTO.fromEntity(savedLesson));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<SwimmingLessonDTO> updateLesson(@PathVariable Long id, @Valid @RequestBody SwimmingLessonDTO lessonDTO) {
+    public ResponseEntity<SwimmingLessonDTO> updateLesson(@PathVariable Long id, @RequestBody SwimmingLessonDTO lessonDTO, @RequestHeader("Authorization") String token) {
+        if (!isAuthorized(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         try {
             SwimmingLesson updatedLesson = scheduleService.updateSchedule(id, lessonDTO.toEntity());
             return ResponseEntity.ok(SwimmingLessonDTO.fromEntity(updatedLesson));
@@ -52,8 +60,17 @@ public class LessonController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteLesson(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteLesson(@PathVariable Long id, @RequestHeader("Authorization") String token) {
+        if (!isAuthorized(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         scheduleService.deleteSchedule(id);
         return ResponseEntity.noContent().build();
+    }
+
+    private boolean isAuthorized(String token) {
+        // Implement token validation logic
+        return token != null && token.startsWith("Bearer ");
     }
 }

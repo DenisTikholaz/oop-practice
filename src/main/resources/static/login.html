@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Форма Логіну</title>
+</head>
+<body>
+<h2>Логін</h2>
+<form id="loginForm">
+    <label for="username">Ім'я користувача:</label>
+    <input type="text" id="username" name="username" required><br><br>
+
+    <label for="password">Пароль:</label>
+    <input type="password" id="password" name="password" required><br><br>
+
+    <button type="submit">Увійти</button>
+</form>
+
+<div id="tokenDisplay" style="margin-top: 20px; font-weight: bold;"></div> <!-- Місце для відображення токену -->
+
+<script>
+    // Обробник події для форми
+    document.getElementById('loginForm').addEventListener('submit', function(event) {
+      event.preventDefault(); // Зупиняємо стандартну поведінку форми
+
+      // Отримуємо значення з полів форми
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      // Виконуємо POST запит до сервера для авторизації
+      fetch('http://localhost:8080/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ username: username, password: password })
+      })
+      .then(response => response.json()) // Парсимо відповідь у форматі JSON
+      .then(data => {
+        if (data.token) {
+          // Якщо токен є в відповіді, відображаємо його на сторінці
+          document.getElementById('tokenDisplay').innerText = 'Ваш токен: ' + data.token;
+        } else {
+          // Якщо токен відсутній, виводимо повідомлення про помилку
+          document.getElementById('tokenDisplay').innerText = 'Невірний логін або пароль';
+        }
+      })
+      .catch(error => {
+        // Обробка помилок
+        document.getElementById('tokenDisplay').innerText = 'Сталася помилка: ' + error.message;
+      });
+    });
+</script>
+</body>
+</html>
