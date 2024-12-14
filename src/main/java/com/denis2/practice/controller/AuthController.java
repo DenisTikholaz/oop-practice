@@ -26,13 +26,15 @@ public class AuthController {
         String username = credentials.get("username");
         String password = credentials.get("password");
 
+        // Перевірка логіну та паролю
         if (adminUsername.equals(username) && adminPassword.equals(password)) {
-            long expirationTime = System.currentTimeMillis() + 5 * 60 * 1000; // 5 minutes
+            long expirationTime = System.currentTimeMillis() + 5 * 60 * 1000; // Термін дії токену - 5 хвилин
             String randomTokenPart = generateRandomTokenPart();
             String token = Base64.getEncoder().encodeToString((username + ":" + expirationTime + ":" + randomTokenPart).getBytes());
-            return ResponseEntity.ok(Map.of("token", token));
+            return ResponseEntity.ok(Map.of("token", token)); // Повертаємо токен у відповіді
         }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Невірний логін або пароль");
     }
 
     private String generateRandomTokenPart() {
@@ -41,3 +43,4 @@ public class AuthController {
         return Base64.getUrlEncoder().withoutPadding().encodeToString(randomBytes);
     }
 }
+

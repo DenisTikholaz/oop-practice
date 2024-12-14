@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Панель адміністратора</title>
+</head>
+<body>
+<h1>Панель адміністратора</h1>
+<label for="token">Введіть токен адміністратора:</label>
+<input type="text" id="token" placeholder="Токен">
+<button onclick="authenticate()">Вхід</button>
+
+<div id="adminPanel" style="display:none;">
+    <h2>Операції з уроками плавання</h2>
+    <button onclick="getSchedules()">Отримати всі уроки</button>
+    <div id="schedulesTable"></div>
+</div>
+
+<script>
+    let token = '';
+
+    function authenticate() {
+        const enteredToken = document.getElementById('token').value;
+        if (enteredToken) {
+            token = enteredToken;
+            document.getElementById('adminPanel').style.display = 'block';
+            alert('Вхід успішний');
+        } else {
+            alert('Введіть токен!');
+        }
+    }
+
+    async function getSchedules() {
+        const response = await fetch('/api/schedules/grouped', {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
+        });
+        const schedules = await response.json();
+        displaySchedules(schedules);
+    }
+
+    function displaySchedules(schedules) {
+        let tableHTML = '<table border="1"><thead><tr><th>Day</th><th>Group Name</th><th>Lesson Number</th><th>Date</th><th>Coach</th><th>Pool Number</th></tr></thead><tbody>';
+
+        for (let day in schedules) {
+            let lessons = schedules[day];
+            lessons.forEach(lesson => {
+                tableHTML += `<tr>
+                    <td>${day}</td>
+                    <td>${lesson.groupName}</td>
+                    <td>${lesson.lessonNumber}</td>
+                    <td>${lesson.date}</td>
+                    <td>${lesson.coach}</td>
+                    <td>${lesson.poolNumber}</td>
+                </tr>`;
+            });
+        }
+
+        tableHTML += '</tbody></table>';
+        document.getElementById('schedulesTable').innerHTML = tableHTML;
+    }
+</script>
+</body>
+</html>
